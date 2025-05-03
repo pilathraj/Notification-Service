@@ -18,8 +18,7 @@ import (
 const (
 	ConsumerGroup      = "notifications-group"
 	ConsumerTopic      = "notifications"
-	ConsumerPort       = ":8081"
-	KafkaServerAddress = "localhost:9092"
+	KafkaServerAddress = "kafka-service:9092"
 )
 
 // ============== HELPER FUNCTIONS ==============
