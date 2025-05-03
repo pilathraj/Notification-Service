@@ -21,7 +21,7 @@ minikube-start:
 	minikube start --driver=docker
 	
 
-deploy-minikube:
+minikube-deploy:
 	@echo "Deploying to Minikube..."
 	kubectl apply -f kafka-deployment.yaml
 	kubectl apply -f kafka-service.yaml
@@ -33,10 +33,21 @@ minikube-stop:
 	minikube stop
 	minikube delete
 
+minikube-stop-services:
+	@echo "Stopping Minikube..."
+	kubectl delete -f kafka-deployment.yaml
+	kubectl delete -f kafka-service.yaml
+	kubectl delete -f notification-app-deployment.yaml
+	kubectl delete -f notification-app-service.yaml
+
 minikube-status:
 	@echo "Checking Minikube status..."
 	kubectl get deployments
 	kubectl get services
+
+minikube-tunnel:
+	@echo "Starting Minikube tunnel..."
+	minikube tunnel
 
 stop:
 	@echo "Stopping the project..."
@@ -45,14 +56,20 @@ stop:
 all: init install build deploy
 	@echo "All tasks completed successfully."
 
-debug:
+minikube-debug:
 	@echo "Debugging the project..."
-	#docker-compose up --build
+	#kubectl get pods
 	kubectl get pods
+	@echo "---------------------------------------------------------"
 	# kubectl describe pod <pod-name>
-	# kubectl logs -f <pod-name>
+	kubectl describe pod $(shell kubectl get pods -l app=notification-app -o jsonpath="{.items[0].metadata.name}")
+	@echo "---------------------------------------------------------"
+	# kubectl get service
+	kubectl get service kafka-service
 	kubectl get service notification-app-service
-	# kubectl logs <YOUR_NOTIFICATION_APP_POD_NAME>
+	@echo "---------------------------------------------------------"
+	# kubectl logs -f <YOUR_NOTIFICATION_APP_POD_NAME>
+	kubectl logs -f $(shell kubectl get pods -l app=notification-app -o jsonpath="{.items[0].metadata.name}")
+	@echo "---------------------------------------------------------"
 	# minikube image ls 
-	# kubectl delete -f notification-app-deployment.yaml and apply again
 

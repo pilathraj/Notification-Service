@@ -1,89 +1,140 @@
-# Notification-Service
+Notification Service
+# Notification Service
 
-Notification-Service is a microservice designed to handle notifications. It uses Kafka for messaging and Docker for containerization.
+This project is a notification service that uses Kafka for message brokering. It includes a Kafka service and a notification-app service, which are managed using Docker Compose or deployed to Minikube for Kubernetes-based environments.
 
 ## Prerequisites
-
 - Docker
 - Docker Compose
-- Minikube (optional, for Kubernetes deployment)
-- Go (for building the project)
+- Minikube
+- Go (for development)
 
-## Makefile Commands
+## Project Structure
+### Services
+#### Kafka Service:
+- Uses the `bitnami/kafka` image.
+- Configured with multiple listeners:
+    - `PLAINTEXT://kafka-service:9092` for internal communication.
+    - `EXTERNAL://localhost:9094` for external communication.
+- Health checks are included to ensure Kafka is running properly.
 
-The `Makefile` provides the following commands:
-
-- `make init`: Initializes the project.
-- `make install`: Installs dependencies using `go get`.
-- `make build`: Builds the Docker image for the project.
-- `make deploy`: Deploys the project using `docker-compose`.
-- `make deploy-minikube`: Deploys the project to Minikube (requires Kubernetes setup).
-- `make stop`: Stops the running Docker containers.
-- `make all`: Runs `init`, `install`, `build`, and `deploy` in sequence.
-
-## Docker Compose Services
-
-The `docker-compose.yml` defines the following services:
-
-1. **Zookeeper**:
-    - Image: `bitnami/zookeeper:latest`
-    - Ports: `2181:2181`
-    - Environment: `ALLOW_ANONYMOUS_LOGIN=yes`
-
-2. **Kafka**:
-    - Image: `bitnami/kafka:latest`
-    - Ports: `9092:9092`
-    - Environment:
-      - `KAFKA_BROKER_ID=1`
-      - `KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181`
-      - `KAFKA_CFG_LISTENERS=PLAINTEXT://:9092`
-      - `KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092`
-      - `ALLOW_PLAINTEXT_LISTENER=yes`
-    - Depends on: `zookeeper`
-
-3. **Notification-App**:
-    - Image: `notification-app:latest`
-    - Ports: `8081:8081`
-    - Environment: `KAFKA_BROKERS=kafka:9092`
-    - Depends on: `kafka`
+#### Notification App:
+- A custom application that connects to Kafka as a producer/consumer.
+- Exposes port `8081` for external communication.
+- Configured with the following environment variables:
+    - `KAFKA_BROKERS`: Kafka broker address (`kafka:9092`).
+    - `KAFKA_BOOTSTRAP_SERVERS`: Kafka bootstrap servers (`kafka:9092`).
+    - `KAFKA_CONSUMER_GROUP`: Consumer group for the app (`notification-app`).
 
 ## Usage
+### Local Development with Docker Compose
+1. Initialize the Project:
+     ```
+     make init
+     ```
 
-### Build and Deploy
+2. Install Dependencies:
+     ```
+     make install
+     ```
 
-To build and deploy the project, follow these steps:
+3. Build the Docker Image:
+     ```
+     make build
+     ```
 
-1. Initialize the project:
-    ```bash
-    make init
-    ```
+4. Deploy the Services:
+     ```
+     make deploy
+     ```
 
-2. Install project dependencies:
-    ```bash
-    make install
-    ```
+5. Stop the Services:
+     ```
+     make stop
+     ```
 
-3. Build the Docker image:
-    ```bash
-    make build
-    ```
+### Deployment to Minikube
+1. Start Minikube:
+     ```
+     make minikube-start
+     ```
 
-4. Deploy the project using `docker-compose`:
-    ```bash
-    make deploy
-    ```
+2. Deploy to Minikube:
+     ```
+     make minikube-deploy
+     ```
 
-5. (Optional) Deploy the project to Minikube:
-    ```bash
-    make deploy-minikube
-    ```
+3. Check Minikube Status:
+     ```
+     make minikube-status
+     ```
 
-6. Stop the running Docker containers:
-    ```bash
-    make stop
-    ```
+4. Start Minikube Tunnel (for LoadBalancer services):
+     ```
+     make minikube-tunnel
+     ```
 
-7. Run all the above steps in sequence:
-    ```bash
-    make all
-    ```
+5. Stop Minikube Services:
+     ```
+     make minikube-stop-services
+     ```
+
+6. Stop and Delete Minikube:
+     ```
+     make minikube-stop
+     ```
+
+### Debugging in Minikube
+To debug the application in Minikube, use:
+```
+make minikube-debug
+```
+
+This will:
+- List all pods.
+- Describe the notification-app pod.
+- Display the services (kafka-service and notification-app-service).
+- Tail the logs of the notification-app pod.
+
+## Configuration
+### Kafka Service
+The Kafka service is configured with the following:
+- Listeners:
+    - `PLAINTEXT://kafka-service:9092` (internal communication).
+    - `EXTERNAL://localhost:9094` (external communication).
+- Environment Variables:
+    - `KAFKA_CFG_NODE_ID=0`
+    - `KAFKA_CFG_PROCESS_ROLES=controller,broker`
+    - `KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-service:9093`
+    - `KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER`
+    - `KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT`
+
+### Notification App
+The notification-app is configured with the following environment variables:
+- `KAFKA_BROKERS=kafka:9092`
+- `KAFKA_BOOTSTRAP_SERVERS=kafka:9092`
+- `KAFKA_CONSUMER_GROUP=notification-app`
+
+## Volumes
+### Kafka Data
+A local volume (`kafka_data`) is used to persist Kafka data.
+
+## Makefile Commands
+| Command | Description |
+|---------|-------------|
+| `make init` | Initializes the project. |
+| `make install` | Installs dependencies. |
+| `make build` | Builds the Docker image for the notification app. |
+| `make deploy` | Deploys the services using Docker Compose. |
+| `make stop` | Stops the services. |
+| `make minikube-start` | Starts Minikube. |
+| `make minikube-deploy` | Deploys the services to Minikube. |
+| `make minikube-status` | Checks the status of Minikube deployments. |
+| `make minikube-tunnel` | Starts a Minikube tunnel for LoadBalancer services. |
+| `make minikube-stop` | Stops and deletes Minikube. |
+| `make minikube-stop-services` | Stops the Minikube services. |
+| `make minikube-debug` | Debugs the Minikube deployment. |
+
+## Notes
+- Ensure that Docker and Minikube are installed and running before executing the commands.
+- Use `make all` to initialize, install dependencies, build, and deploy the project in one step.

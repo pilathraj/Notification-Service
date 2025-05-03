@@ -20,5 +20,7 @@ spec:
           env:
             - name: KAFKA_BROKERS
               value: kafka-service:9092
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka-service:9092
           ports:
             - containerPort: 8081
