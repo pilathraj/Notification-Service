@@ -6,8 +6,8 @@
 ### Services
 ![Services](./Services.png)
 
-### Send service
+### Send Service
 ![Send Service](./send.png)
 
-### Notification service
+### Notification Service
 ![Notification Service](./notification.png)
