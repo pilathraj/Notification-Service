@@ -9,5 +9,5 @@
 ### Send service
 ![Send Service](./send.png)
 
-### notification service
+### Notification service
 ![Notification Service](./notification.png)
