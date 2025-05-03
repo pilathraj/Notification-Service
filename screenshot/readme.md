@@ -1,13 +1,13 @@
 # Screenshots
 
 ### Pad status
-![Pad Status](./pad.png)
+![Pad Status](./Pad.png)
 
 ### Services
-![Services](./service.png)
+![Services](./Services.png)
 
 ### Send service
 ![Send Service](./send.png)
 
 ### notification service
-![Notification Service](./send.png)
+![Notification Service](./notification.png)
