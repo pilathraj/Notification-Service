@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-app
+  labels:
+    app: notification-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-app
+  template:
+    metadata:
+      labels:
+        app: notification-app
+    spec:
+      containers:
+        - name: notification-app
+          image: pilathraj/notification-app:latest
+          env:
+            - name: KAFKA_BROKERS
+              value: kafka-service:9092
+          ports:
+            - containerPort: 8081

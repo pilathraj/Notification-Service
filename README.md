@@ -25,9 +25,12 @@ The `Makefile` provides the following commands:
 
 The `docker-compose.yml` defines the following services:
 
+1. **Zookeeper**:
+    - Image: `bitnami/zookeeper:latest`
+    - Ports: `2181:2181`
+    - Environment: `ALLOW_ANONYMOUS_LOGIN=yes`
 
-
-1. **Kafka**:
+2. **Kafka**:
     - Image: `bitnami/kafka:latest`
     - Ports: `9092:9092`
     - Environment:
@@ -38,7 +41,7 @@ The `docker-compose.yml` defines the following services:
       - `ALLOW_PLAINTEXT_LISTENER=yes`
     - Depends on: `zookeeper`
 
-2. **Notification-App**:
+3. **Notification-App**:
     - Image: `notification-app:latest`
     - Ports: `8081:8081`
     - Environment: `KAFKA_BROKERS=kafka:9092`
