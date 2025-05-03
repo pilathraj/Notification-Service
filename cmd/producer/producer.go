@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	KafkaServerAddress = "localhost:9092"
+	KafkaServerAddress = "kafka-service:9092"
 	KafkaTopic         = "notifications"
 )
 
