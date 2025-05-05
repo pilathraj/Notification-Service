@@ -5,10 +5,31 @@ networks:
     driver: bridge
 
 services:
+  postgres-service:
+    image: 'postgres:latest'
+    container_name: postgres-service
+    hostname: postgres-service
+    networks:
+      - kafka-network
+    ports:
+      - 5432:5432/tcp
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:rw
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
 
   kafka-service:
     image: 'bitnami/kafka:latest'
-    container_name: kafka
+    container_name: kafka-service
+    hostname: kafka-service
     networks:
       - kafka-network
     environment:
@@ -31,18 +52,25 @@ services:
     build:
       context: .
     container_name: notification-app
+    hostname: notification-app
     ports:
-      - "8081:8081"
+      - 8081:8081/tcp
     environment:
-      - KAFKA_BROKERS=kafka:9092
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_BROKERS=kafka-service:9092
+      - KAFKA_TOPIC=notifications
+      - KAFKA_BOOTSTRAP_SERVERS=kafka-service:9092
       - KAFKA_CONSUMER_GROUP=notification-app
+      - POSTGRES_DATABASE_DSN=host=postgres-service user=root password=postgres dbname=notifications_db port=5432 sslmode=disable TimeZone=Asia/Kolkata
     depends_on:
       - kafka-service
+      - postgres-service
+        
     networks:
       - kafka-network
     restart: unless-stopped
 
 volumes:
   kafka_data:
-    driver: local
+    external: true
+  postgres_data:
+    external: true

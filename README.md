@@ -8,6 +8,21 @@ This project is a notification service that uses Kafka for message brokering. It
 - Docker Compose
 - Minikube
 - Go (for development)
+- Kafka:
+Ensure Kafka is running locally on localhost:9092.
+Create the notifications topic:
+```cmd 
+kafka-topics --create --topic notifications --bootstrap-server localhost:9092
+or
+docker exec -it kafka-service /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic notifications --bootstrap-server localhost:9092
+```
+- PostgreSQL:
+Ensure PostgreSQL is running locally on localhost:5432.
+Create a database named notifications:
+```cmd
+CREATE DATABASE notifications_db;
+```
+
 
 ## Project Structure
 ### Services
