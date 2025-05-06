@@ -23,9 +23,19 @@ minikube-start:
 
 minikube-deploy:
 	@echo "Deploying to Minikube..."
+	# Apply PersistentVolumes and PersistentVolumeClaims
+	kubectl apply -f postgres-pv.yaml
+	kubectl apply -f kafka-pv.yaml
+	# Apply ConfigMaps
+	kubectl apply -f postgres-configmap.yaml
+	kubectl apply -f kafka-configmap.yaml
+	# Apply Deployments
+	kubectl apply -f postgres-deployment.yaml
 	kubectl apply -f kafka-deployment.yaml
-	kubectl apply -f kafka-service.yaml
 	kubectl apply -f notification-app-deployment.yaml
+	# Apply Services
+	kubectl apply -f postgres-service.yaml
+	kubectl apply -f kafka-service.yaml
 	kubectl apply -f notification-app-service.yaml
 	
 minikube-stop:
@@ -35,6 +45,8 @@ minikube-stop:
 
 minikube-stop-services:
 	@echo "Stopping Minikube..."
+	kubectl delete -f postgres-deployment.yaml
+	kubectl delete -f postgres-service.yaml
 	kubectl delete -f kafka-deployment.yaml
 	kubectl delete -f kafka-service.yaml
 	kubectl delete -f notification-app-deployment.yaml
@@ -42,8 +54,11 @@ minikube-stop-services:
 
 minikube-status:
 	@echo "Checking Minikube status..."
+	kubectl get pv
+	kubectl get pvc
 	kubectl get deployments
 	kubectl get services
+	kubectl get pods
 
 minikube-tunnel:
 	@echo "Starting Minikube tunnel..."

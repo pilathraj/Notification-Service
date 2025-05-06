@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-app
+  name: notification-app-deployment
   labels:
     app: notification-app
 spec:
@@ -17,10 +17,16 @@ spec:
       containers:
         - name: notification-app
           image: pilathraj/notification-app:latest
+          ports:
+            - containerPort: 8081
           env:
             - name: KAFKA_BROKERS
               value: kafka-service:9092
+            - name: KAFKA_TOPIC
+              value: notifications
             - name: KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
-          ports:
-            - containerPort: 8081
+            - name: KAFKA_CONSUMER_GROUP
+              value: notification-app
+            - name: POSTGRES_DATABASE_DSN
+              value: host=postgres-service user=root password=postgres dbname=notifications_db port=5432 sslmode=disable TimeZone=Asia/Kolkata

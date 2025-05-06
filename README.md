@@ -16,6 +16,10 @@ kafka-topics --create --topic notifications --bootstrap-server localhost:9092
 or
 docker exec -it kafka-service /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic notifications --bootstrap-server localhost:9092
 ```
+- create topic inside minikube service
+```cmd
+/opt/bitnami/kafka/bin/kafka-topics.sh --create --topic notifications --bootstrap-server localhost:9092
+
 - PostgreSQL:
 Ensure PostgreSQL is running locally on localhost:5432.
 Create a database named notifications:

@@ -1,16 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-service # Name of the Kubernetes Service
+  name: kafka-service
 spec:
   selector:
-    app: kafka # Selects pods with the label 'app: kafka'
+    app: kafka
   ports:
-    - name: client
-      protocol: TCP
-      port: 9092 # The port the service exposes for clients
-      targetPort: 9092 # The port the Kafka container listens on
-    - name: controller
-      protocol: TCP
-      port: 9093 # Port for Kafka controller communication
-      targetPort: 9093 # The controller port in the Kafka container
+    - protocol: TCP
+      port: 9092
+      targetPort: 9092
+  type: ClusterIP
