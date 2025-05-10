@@ -18,7 +18,7 @@ docker exec -it kafka-service /opt/bitnami/kafka/bin/kafka-topics.sh --create --
 ```
 - create topic inside minikube service
 ```cmd
-/opt/bitnami/kafka/bin/kafka-topics.sh --create --topic notifications --bootstrap-server localhost:9092
+/opt/bitnami/kafka/bin/kafka-topics.sh --create --topic notifications --bootstrap-server kafka-service:9092
 
 - PostgreSQL:
 Ensure PostgreSQL is running locally on localhost:5432.

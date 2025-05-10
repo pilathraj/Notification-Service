@@ -54,7 +54,7 @@ services:
     container_name: notification-app
     hostname: notification-app
     ports:
-      - 8081:8081/tcp
+      - 8083:8083/tcp
     environment:
       - KAFKA_BROKERS=kafka-service:9092
       - KAFKA_TOPIC=notifications

@@ -18,7 +18,7 @@ deploy:
 
 minikube-start:
 	@echo "Starting Minikube..."
-	minikube start --driver=docker
+	minikube start --driver=docker --cpus=4 --memory=4200 --disk-size=20g
 	
 
 minikube-deploy:

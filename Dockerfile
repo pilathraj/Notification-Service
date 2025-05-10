@@ -43,7 +43,7 @@ WORKDIR /
 COPY --from=builder /binary /app
 
 # Expose the port your Gin app listens on (e.g., 8081)
-EXPOSE 8081
+EXPOSE 8083
 
 # Set the command to run the Gin application
 CMD ["/app"]

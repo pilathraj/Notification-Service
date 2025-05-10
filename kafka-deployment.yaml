@@ -14,6 +14,22 @@ spec:
       labels:
         app: kafka
     spec:
+      # initContainers:
+      #   - name: create-topic
+      #     image: bitnami/kafka:latest
+      #     command:
+      #       - sh
+      #       - -c
+      #       - |
+      #         /opt/bitnami/kafka/bin/kafka-topics.sh \
+      #         --create \
+      #         --topic notifications \
+      #         --bootstrap-server kafa-service:9092 \
+      #         --partitions 1 \
+      #         --replication-factor 1
+      #     envFrom:
+      #       - configMapRef:
+      #           name: kafka-config
       containers:
         - name: kafka
           image: bitnami/kafka:latest
@@ -27,6 +43,13 @@ spec:
               name: kafka-storage
           livenessProbe: null
           readinessProbe: null
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
           
       volumes:
         - name: kafka-storage

@@ -18,7 +18,7 @@ spec:
         - name: notification-app
           image: pilathraj/notification-app:latest
           ports:
-            - containerPort: 8081
+            - containerPort: 8083
           env:
             - name: KAFKA_BROKERS
               value: kafka-service:9092
