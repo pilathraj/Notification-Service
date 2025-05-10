@@ -75,12 +75,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/notifications/1/read",
+							"raw": "http://localhost:8083/api/notifications/1/read",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8083",
 							"path": [
 								"api",
 								"notifications",
@@ -128,7 +128,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n   \"userId\":\"1\",\n\t\"subject\":\"Test\",\n\t\"content\":\"Test Message\",\n\t\"type\":\"notification\",\n\t\"channel\":\"Email\"\n}",
+							"raw": "{\n    \"userId\": \"1\",\n    \"dueReminders\": true,\n    \"overdueNotices\": false,\n\t\"preferredChannels\":[\"email\", \"Sms\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -136,12 +136,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/notifications/preferences/1",
+							"raw": "http://localhost:8083/api/notifications/preferences/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8083",
 							"path": [
 								"api",
 								"notifications",
@@ -175,7 +175,28 @@
 					"response": []
 				},
 				{
-					"name": "notify",
+					"name": "consume-events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/notifications/consume",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"notifications",
+								"consume"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "consume-events-by-user-id",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -192,17 +213,17 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081//api/notifications/notify",
+							"raw": "http://localhost:8083/api/notifications/consume/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8083",
 							"path": [
-								"",
 								"api",
 								"notifications",
-								"notify"
+								"consume",
+								"1"
 							]
 						}
 					},
