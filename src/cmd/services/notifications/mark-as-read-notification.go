@@ -2,7 +2,7 @@ package notifications
 
 import (
 	"net/http"
-	"notification-service/pkg/models"
+	"notification-service/src/pkg/models"
 	"time"
 
 	"github.com/gin-gonic/gin"

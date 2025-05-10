@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"notification-service/pkg/models"
+	"notification-service/src/pkg/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/segmentio/kafka-go"

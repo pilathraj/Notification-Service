@@ -2,7 +2,7 @@ package notifications
 
 import (
 	"net/http"
-	"notification-service/pkg/models"
+	"notification-service/src/pkg/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
