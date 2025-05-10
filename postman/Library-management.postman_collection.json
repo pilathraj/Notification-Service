@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "967d3f3d-acef-4192-aa9b-c6249478e5e7",
+		"name": "Library-management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2834009"
+	},
+	"item": [
+		{
+			"name": "Notification-Service",
+			"item": [
+				{
+					"name": "user-notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/notifications/user/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"notifications",
+								"user",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send-notification",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"userId\":\"3\",\n\t\"subject\":\"Test123\",\n\t\"content\":\"Test Message 3\",\n\t\"type\":\"notification\",\n\t\"channel\":\"Email\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/notifications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mark-notification-as-read",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"userId\":\"1\",\n\t\"subject\":\"Test\",\n\t\"content\":\"Test Message\",\n\t\"type\":\"notification\",\n\t\"channel\":\"Email\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/notifications/1/read",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"notifications",
+								"1",
+								"read"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-notification",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"userId\":\"1\",\n\t\"subject\":\"Test\",\n\t\"content\":\"Test Message\",\n\t\"type\":\"notification\",\n\t\"channel\":\"Email\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/notifications/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"notifications",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-preferences update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"userId\":\"1\",\n\t\"subject\":\"Test\",\n\t\"content\":\"Test Message\",\n\t\"type\":\"notification\",\n\t\"channel\":\"Email\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/notifications/preferences/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"notifications",
+								"preferences",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-preferences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/notifications/preferences/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"notifications",
+								"preferences",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notify",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"userId\":\"1\",\n\t\"subject\":\"Test\",\n\t\"content\":\"Test Message\",\n\t\"type\":\"notification\",\n\t\"channel\":\"Email\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081//api/notifications/notify",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"",
+								"api",
+								"notifications",
+								"notify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
