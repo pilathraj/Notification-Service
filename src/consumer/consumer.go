@@ -7,19 +7,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sync"
-
-	"notification-service/pkg/models"
 
 	"github.com/IBM/sarama"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
-const (
-	ConsumerGroup      = "notifications-group"
-	ConsumerTopic      = "notifications"
-	KafkaServerAddress = "kafka-service:9092"
-)
+var KafkaServerAddress = os.Getenv("KAFKA_BROKERS")
+var ConsumerTopic = os.Getenv("KAFKA_TOPIC")
+var ConsumerGroup = os.Getenv("KAFKA_CONSUMER_GROUP")
 
 // ============== HELPER FUNCTIONS ==============
 var ErrNoMessagesFound = errors.New("no messages found")
@@ -32,8 +30,10 @@ func getUserIDFromRequest(ctx *gin.Context) (string, error) {
 	return userID, nil
 }
 
+type EventNotification map[string]interface{}
+
 // ====== NOTIFICATION STORAGE ======
-type UserNotifications map[string][]models.Notification
+type UserNotifications map[string][]EventNotification
 
 type NotificationStore struct {
 	Data UserNotifications
@@ -41,13 +41,18 @@ type NotificationStore struct {
 }
 
 func (ns *NotificationStore) Add(userID string,
-	notification models.Notification) {
+	notification EventNotification) {
 	ns.Mu.Lock()
 	defer ns.Mu.Unlock()
 	ns.Data[userID] = append(ns.Data[userID], notification)
 }
+func (ns *NotificationStore) GetAll() UserNotifications {
+	ns.Mu.RLock()
+	defer ns.Mu.RUnlock()
+	return ns.Data
+}
 
-func (ns *NotificationStore) Get(userID string) []models.Notification {
+func (ns *NotificationStore) Get(userID string) []EventNotification {
 	ns.Mu.RLock()
 	defer ns.Mu.RUnlock()
 	return ns.Data[userID]
@@ -65,7 +70,7 @@ func (consumer *Consumer) ConsumeClaim(
 	sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
 		userID := string(msg.Key)
-		var notification models.Notification
+		var notification EventNotification
 		err := json.Unmarshal(msg.Value, &notification)
 		if err != nil {
 			log.Printf("failed to unmarshal notification: %v", err)
@@ -111,22 +116,41 @@ func SetupConsumerGroup(ctx context.Context, store *NotificationStore) {
 	}
 }
 
-func HandleNotifications(ctx *gin.Context, store *NotificationStore) {
-	userID, err := getUserIDFromRequest(ctx)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
-		return
-	}
+func HandleAllNotifications(ctx *gin.Context, store *NotificationStore) {
 
-	notes := store.Get(userID)
-	if len(notes) == 0 {
+	uuid := uuid.New()
+	events := store.GetAll()
+	if len(events) == 0 {
 		ctx.JSON(http.StatusOK,
 			gin.H{
-				"message":       "No notifications found for user",
-				"notifications": []models.Notification{},
+				"messageId": uuid.String(),
+				"message":   "No events found",
+				"events":    []EventNotification{},
 			})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"notifications": notes})
+	ctx.JSON(http.StatusOK, gin.H{"messageId": uuid.String(), "message": "Email has been sent successfully.", "events": events})
+}
+
+func HandleNotifications(ctx *gin.Context, store *NotificationStore) {
+	userID, err := getUserIDFromRequest(ctx)
+	uuid := uuid.New()
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"messageId": uuid.String(), "message": err.Error()})
+		return
+	}
+
+	events := store.Get(userID)
+	if len(events) == 0 {
+		ctx.JSON(http.StatusOK,
+			gin.H{
+				"messageId": uuid.String(),
+				"message":   "No events found",
+				"events":    []EventNotification{},
+			})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"messageId": uuid.String(), "message": "Email has been sent successfully.", "events": events})
 }
