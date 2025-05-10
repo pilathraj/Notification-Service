@@ -31,7 +31,7 @@ COPY . .
 RUN ls -l /app
 
 # Build the Gin application
-RUN --mount=type=cache,target=/app/go/pkg/mod go build -o /binary ./cmd/main/main.go
+RUN --mount=type=cache,target=/app/go/pkg/mod go build -o /binary ./src/cmd/main/main.go
 
 # Use a minimal Alpine image as the final image
 FROM alpine:latest

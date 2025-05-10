@@ -59,7 +59,7 @@ services:
       - KAFKA_BROKERS=kafka-service:9092
       - KAFKA_TOPIC=notifications
       - KAFKA_BOOTSTRAP_SERVERS=kafka-service:9092
-      - KAFKA_CONSUMER_GROUP=notification-app
+      - KAFKA_CONSUMER_GROUP=notification-app-group
       - POSTGRES_DATABASE_DSN=host=postgres-service user=root password=postgres dbname=notifications_db port=5432 sslmode=disable TimeZone=Asia/Kolkata
     depends_on:
       - kafka-service

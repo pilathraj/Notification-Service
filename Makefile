@@ -19,24 +19,32 @@ deploy:
 minikube-start:
 	@echo "Starting Minikube..."
 	minikube start --driver=docker --cpus=4 --memory=4200 --disk-size=20g
-	
 
-minikube-deploy:
+minikube-deploy-infrastructure:
 	@echo "Deploying to Minikube..."
 	# Apply PersistentVolumes and PersistentVolumeClaims
-	kubectl apply -f postgres-pv.yaml
-	kubectl apply -f kafka-pv.yaml
+	kubectl apply -f k8s/postgres-pv.yaml
+	kubectl apply -f k8s/kafka-pv.yaml
 	# Apply ConfigMaps
-	kubectl apply -f postgres-configmap.yaml
-	kubectl apply -f kafka-configmap.yaml
+	kubectl apply -f k8s/postgres-configmap.yaml
+	kubectl apply -f k8s/kafka-configmap.yaml
 	# Apply Deployments
-	kubectl apply -f postgres-deployment.yaml
-	kubectl apply -f kafka-deployment.yaml
-	kubectl apply -f notification-app-deployment.yaml
+	kubectl apply -f k8s/postgres-deployment.yaml
+	kubectl apply -f k8s/kafka-deployment.yaml
+	kubectl apply -f k8s/notification-app-deployment.yaml
 	# Apply Services
-	kubectl apply -f postgres-service.yaml
-	kubectl apply -f kafka-service.yaml
-	kubectl apply -f notification-app-service.yaml
+	kubectl apply -f k8s/postgres-service.yaml
+	kubectl apply -f k8s/kafka-service.yaml
+	kubectl apply -f k8s/notification-app-service.yaml
+
+
+minikube-deploy:
+	@echo "Deploying notification app to Minikube..."
+	kubectl apply -f k8s/notification-app-deployment.yaml
+	kubectl apply -f k8s/notification-app-service.yaml
+	# Apply cronjob
+	kubectl apply -f k8s/kafka-consumer-cronjob.yaml
+
 	
 minikube-stop:
 	@echo "Stopping Minikube..."
@@ -45,12 +53,13 @@ minikube-stop:
 
 minikube-stop-services:
 	@echo "Stopping Minikube..."
-	kubectl delete -f postgres-deployment.yaml
-	kubectl delete -f postgres-service.yaml
-	kubectl delete -f kafka-deployment.yaml
-	kubectl delete -f kafka-service.yaml
-	kubectl delete -f notification-app-deployment.yaml
-	kubectl delete -f notification-app-service.yaml
+	kubectl delete -f k8s/postgres-deployment.yaml
+	kubectl delete -f k8s/postgres-service.yaml
+	kubectl delete -f k8s/kafka-deployment.yaml
+	kubectl delete -f k8s/kafka-service.yaml
+	kubectl delete -f k8s/notification-app-deployment.yaml
+	kubectl delete -f k8s/notification-app-service.yaml
+	kubectl delete -f k8s/kafka-consumer-cronjob.yaml
 
 minikube-status:
 	@echo "Checking Minikube status..."

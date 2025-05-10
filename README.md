@@ -80,6 +80,7 @@ CREATE DATABASE notifications_db;
 
 2. Deploy to Minikube:
      ```
+     make minikube-deploy-infrastructure
      make minikube-deploy
      ```
 
@@ -147,6 +148,7 @@ A local volume (`kafka_data`) is used to persist Kafka data.
 | `make deploy` | Deploys the services using Docker Compose. |
 | `make stop` | Stops the services. |
 | `make minikube-start` | Starts Minikube. |
+| `make minikube-deploy-infrastructure` | Deploys infrastructure services to Minikube |
 | `make minikube-deploy` | Deploys the services to Minikube. |
 | `make minikube-status` | Checks the status of Minikube deployments. |
 | `make minikube-tunnel` | Starts a Minikube tunnel for LoadBalancer services. |
