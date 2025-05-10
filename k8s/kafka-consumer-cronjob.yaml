@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kafka-consumer-trigger
+spec:
+  schedule: "*/1 * * * *" # Runs every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: curl
+              image: curlimages/curl:latest
+              command:
+                - curl
+                - "-X"
+                - GET
+                - "http://localhost:8083/api/notifications/consume"
+          restartPolicy: OnFailure

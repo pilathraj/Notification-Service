@@ -27,6 +27,6 @@ spec:
             - name: KAFKA_BOOTSTRAP_SERVERS
               value: kafka-service:9092
             - name: KAFKA_CONSUMER_GROUP
-              value: notification-app
+              value: notification-app-group
             - name: POSTGRES_DATABASE_DSN
               value: host=postgres-service user=root password=postgres dbname=notifications_db port=5432 sslmode=disable TimeZone=Asia/Kolkata
